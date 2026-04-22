@@ -1,4 +1,4 @@
-# 5G Core Security Lab — ELEC0138 Group 1
+## 5G Core Security Lab — ELEC0138 Group 1
 
 **UCL ELEC0138 Security & Privacy · 2025/26**
 
@@ -59,15 +59,13 @@ UE → gNB → AMF → AUSF → UDM → UPF → Internet
 - **N2 (NGAP):** gNB → AMF signalling  
 - **N12 / N13 (SBI):** AMF ↔ AUSF ↔ UDM (authentication flow)  
 - **N3 (GTP-U):** gNB → UPF (user data tunnel)  
-- **N6 / SGi:** UPF → Internet  
-
-🔐 **Security anchor:** UDM generates authentication vectors using K and OPc — these secrets never leave the UDM.
+- **N6 / SGi:** UPF → Internet  🔐 **Security anchor:** UDM generates authentication vectors using long-term authentication keys (K, OPc) — thts never leave the UDM.
 
 ---
 
 ### ⚙️ Demo System Architecture (How It Connects)
 
-The entire system runs on a single AWS EC2 instance and is orchestrated through a lightweight proxy layer.
+The system is orchestrated by a FastAPI backend that acts as a control layer between the frontend, UERANSIM (UE + gNB), and the Open5GS core, translating browser requests into process execution, coordinating interactions across the stack, and returning real-time results to the UI.
 
 - **Frontend (Browser):** `5g_demo.html` — visualises registration, attacks, and flows  
 - **FastAPI Proxy:** controls UERANSIM and Open5GS via REST (`:9999`)  
