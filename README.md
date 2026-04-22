@@ -65,15 +65,17 @@ Real ICMP packets from the registered UE through Open5GS UPF to the public inter
 | Attack 2: UDM SSRF | Direct HTTP/2 POST to UDM SBI bypassing AMF and AUSF | HTTP 400 — no OAuth2 Bearer token |
 
 ### Tab 5 — SQN Synchronisation DoS + WAF
-Flooding authentication requests desynchronises the UE SQN counter causing SYNCH_FAILURE. Rate-limiting WAF (5 req/10s per IMSI) blocks the flood. Live toggle between protected and unprotected states.
+Covers the threat landscape for SQN-based Denial of Service attacks, explaining how repeated authentication requests desynchronise the UE SQN counter causing SYNCH_FAILURE and locking out legitimate subscribers.
+Live demo: attack runs against the real Open5GS core showing the DoS in action. A rate-limiting WAF is then toggled on — blocking the flood with HTTP 429. Toggle between protected and unprotected states live to see the difference.
 
 ### Tab 6 — MongoDB Credential Exfiltration + Wire Protocol WAF
-Three-step attack exploiting Open5GS direct UDR to MongoDB plaintext connection:
-1. Unauthenticated scan — blocked by MongoDB auth
-2. Read /etc/open5gs/udr.yaml — recovers plaintext credentials
+Covers the threat landscape for subscriber credential theft, explaining why Open5GS stores Ki and OPc as plaintext BSON in MongoDB and how this mirrors the April 2025 SK Telecom breach affecting 23-27 million subscribers.
+Live demo: three-step attack against the real running MongoDB on EC2:
+1. Unauthenticated scan — blocked by MongoDB auth layer
+2. Read /etc/open5gs/udr.yaml — recovers plaintext credentials from config file
 3. Authenticated query bypassing proxy — returns AES-256 Fernet ciphertext (mitigation holds)
 
-Novel mitigation: mongo_proxy.py — a MongoDB Wire Protocol proxy on :27018 that intercepts BSON responses and decrypts gAAAAA... Fernet-encrypted Ki/OPc fields before returning plaintext to Open5GS UDR. Zero changes to Open5GS source code required.
+Novel mitigation: mongo_proxy.py — a MongoDB Wire Protocol WAF proxy on :27018 that intercepts BSON responses and decrypts encrypted Ki/OPc fields before returning plaintext to Open5GS UDR. Implements the same trusted decryption boundary principle as AWS Nitro Enclaves. Zero changes to Open5GS source code required.
 
 ### Tab 7 — Rogue NF Registration via NRF
 Exploits Open5GS shipping with mTLS commented out in nrf.yaml:
