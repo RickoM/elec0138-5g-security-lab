@@ -59,7 +59,7 @@ UE → gNB → AMF → AUSF → UDM → UPF → Internet
 - **N2 (NGAP):** gNB → AMF signalling  
 - **N12 / N13 (SBI):** AMF ↔ AUSF ↔ UDM (authentication flow)  
 - **N3 (GTP-U):** gNB → UPF (user data tunnel)  
-- **N6 / SGi:** UPF → Internet  🔐 **Security anchor:** UDM generates authentication vectors using long-term authentication keys (K, OPc) — thats never leave the UDM.
+- **N6 / SGi:** UPF → Internet  🔐 **Security anchor:** UDM generates authentication vectors using long-term authentication keys (K, OPc) — that never leave the UDM.
 
 ---
 
