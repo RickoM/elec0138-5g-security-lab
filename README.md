@@ -46,9 +46,41 @@ elec0138-5g-security-lab/
 
 ## Demo Tabs
 
-### Tab 1 — Architecture
-End-to-end 5G SA network diagram: UE → gNB → AMF → AUSF → UDM → MongoDB.
-Explains the UDR–MongoDB direct connection (libmongoc, no encryption) and the full demo system setup including the FastAPI proxy layer.
+## Tab 1 — Architecture
+
+### 📡 5G Network Architecture (End-to-End Path)
+
+This demo implements a full 5G Standalone architecture (3GPP Release 17) using Open5GS.
+
+**Control + User Plane Flow:**  
+UE → gNB → AMF → AUSF → UDM → UPF → Internet
+
+- **Uu (Radio):** UE ↔ gNB (UERANSIM)  
+- **N2 (NGAP):** gNB → AMF signalling  
+- **N12 / N13 (SBI):** AMF ↔ AUSF ↔ UDM (authentication flow)  
+- **N3 (GTP-U):** gNB → UPF (user data tunnel)  
+- **N6 / SGi:** UPF → Internet  
+
+🔐 **Security anchor:** UDM generates authentication vectors using K and OPc — these secrets never leave the UDM.
+
+---
+
+### ⚙️ Demo System Architecture (How It Connects)
+
+The entire system runs on a single AWS EC2 instance and is orchestrated through a lightweight proxy layer.
+
+- **Frontend (Browser):** `5g_demo.html` — visualises registration, attacks, and flows  
+- **FastAPI Proxy:** controls UERANSIM and Open5GS via REST (`:9999`)  
+- **UERANSIM:** simulates UE + gNB and connects to AMF (127.0.0.5)  
+- **Open5GS Core:** real 5G core (AMF, AUSF, UDM, UPF, NRF)  
+- **MongoDB:** stores subscriber data (SUPI, K, OPc)  
+
+**User Plane Path:**  
+UE → uesimtun0 → UPF → ogstun → EC2 network → Internet  
+
+🌍 Connectivity is validated by real traffic (e.g. ping to 8.8.8.8 through the 5G core).
+
+---
 
 ### Tab 2 — Registration
 Live 9-step 5G-AKA mutual authentication via real UERANSIM processes.
@@ -159,18 +191,4 @@ ss -tlnp | grep -E "9999|27018"
 ---
 
 ELEC0138 Security & Privacy · UCL · Group 1 · 2025/26
-
-### Tab 1 — Architecture
-This project implements a full end-to-end 5G network (3GPP Release 17) on AWS EC2 using Open5GS and UERANSIM.
-
-Flow:
-UE → gNB → AMF → AUSF → UDM → UPF → Internet
-
-- UERANSIM simulates the UE and base station  
-- Open5GS provides a real 5G core (AMF, AUSF, UDM, UPF, NRF)  
-- FastAPI proxy orchestrates registration, attacks, and logging  
-- MongoDB stores subscriber data  
-- User traffic flows through UPF to the public internet (verified via ping)  
-
-🔐 Key point: Subscriber secrets (K, OPc) remain inside the UDM — forming the root of 5G security.
 
