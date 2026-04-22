@@ -159,3 +159,18 @@ ss -tlnp | grep -E "9999|27018"
 ---
 
 ELEC0138 Security & Privacy · UCL · Group 1 · 2025/26
+
+### Tab 1 — Architecture
+This project implements a full end-to-end 5G network (3GPP Release 17) on AWS EC2 using Open5GS and UERANSIM.
+
+Flow:
+UE → gNB → AMF → AUSF → UDM → UPF → Internet
+
+- UERANSIM simulates the UE and base station  
+- Open5GS provides a real 5G core (AMF, AUSF, UDM, UPF, NRF)  
+- FastAPI proxy orchestrates registration, attacks, and logging  
+- MongoDB stores subscriber data  
+- User traffic flows through UPF to the public internet (verified via ping)  
+
+🔐 Key point: Subscriber secrets (K, OPc) remain inside the UDM — forming the root of 5G security.
+
