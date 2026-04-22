@@ -59,7 +59,7 @@ UE → gNB → AMF → AUSF → UDM → UPF → Internet
 - **N2 (NGAP):** gNB → AMF signalling  
 - **N12 / N13 (SBI):** AMF ↔ AUSF ↔ UDM (authentication flow)  
 - **N3 (GTP-U):** gNB → UPF (user data tunnel)  
-- **N6 / SGi:** UPF → Internet  🔐 **Security anchor:** UDM generates authentication vectors using long-term authentication keys (K, OPc) — thts never leave the UDM.
+- **N6 / SGi:** UPF → Internet  🔐 **Security anchor:** UDM generates authentication vectors using long-term authentication keys (K, OPc) — thats never leave the UDM.
 
 ---
 
@@ -81,9 +81,9 @@ UE → uesimtun0 → UPF → ogstun → EC2 network → Internet
 ---
 
 ### Tab 2 — Registration
-Live 9-step 5G-AKA mutual authentication via real UERANSIM processes.
-Animated canvas sequence diagram driven by actual Open5GS log output.
-UE receives IP 10.45.0.2 on uesimtun0 on successful registration.
+Live 9-step 5G-AKA mutual authentication using real UERANSIM processes.  
+Demonstrates both successful registration (valid MSIN, K, OPc) and failure with incorrect USIM parameters, visualised via an animated sequence diagram driven by real Open5GS logs.  
+On success, the UE is assigned IP address 10.45.0.2 on the uesimtun0 interface. 
 
 ### Tab 3 — Data Proof
 Real ICMP packets from the registered UE through Open5GS UPF to the public internet (8.8.8.8). Confirms the full user-plane path: UE → gNB → GTP-U → UPF → ogstun → Internet.
